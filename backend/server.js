@@ -45,6 +45,10 @@ app.get('/register', (req, res) => {
   res.render('register', { title: 'Register' });
 });
 
+app.get('/listing-create', (req, res) => {
+  res.render('listingCreate', { title: 'Create Listing' });
+});
+
 if (process.env.NODE_ENV !== 'test') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {

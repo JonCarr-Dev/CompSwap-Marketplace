@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title><%= title %></title>
+  <title>Register</title>
   <style>
     html, body {
       height: 100%;
@@ -10,12 +10,9 @@
       padding: 0;
       background-color: dodgerblue;
       color: white;
-      font-family: Arial, sans-serif;
     }
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      position: relative;
       padding: 10px 20px;
     }
     header a {
@@ -25,8 +22,17 @@
     header h1 {
       margin: 0;
     }
+    .logo {
+      display: inline;
+    }
+    .page-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+    }
     .content {
-      margin: 20px;
+      margin: 200px;
     }
     form {
       max-width: 400px;
@@ -60,10 +66,10 @@
 </head>
 <body>
   <header>
-    <a href="/" title="Home">
+    <a href="/" title="Home" class="logo">
       <h1>COMP SWAP</h1>
     </a>
-    <h1>Register</h1>
+    <h1 class="page-title">Register</h1>
   </header>
   <section class="content">
     <form action="/api/auth/register" method="post">
