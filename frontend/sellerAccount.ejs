@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seller Account</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: dodgerblue;
+      color: white;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+    }
+    .header-left a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .header-left h1 {
+      margin: 0;
+      color: white;
+    }
+    .header-right button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      background-color: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .tech-update {
+      background-color: orange;
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .navbar {
+      background-color: red;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .navbar a {
+      color: white;
+      margin-right: 15px;
+      text-decoration: none;
+    }
+    .account-sections {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 0 20px;
+      margin-bottom: 30px;
+    }
+    .section {
+      flex: 1 1 200px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: transform .1s ease-in-out;
+    }
+
+    .section:hover { transform: scale(1.05); }
+
+    .section.red    { background-color: #e74c3c; }
+    .section.yellow { background-color: #f1c40f; color: #333; }
+    .section.purple { background-color: #8e44ad; }
+    .section.green  { background-color: #2ecc71; }
+
+    .settings-panel {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      background: rgba(0,0,0,0.3);
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .settings-panel.active {
+      display: block;
+    }
+    .settings-panel h2 {
+      margin-top: 0;
+    }
+    .settings-panel button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-left">
+      <a href="/" title="Home">
+        <h1>COMP SWAP</h1>
+      </a>
+    </div>
+    <div class="header-right">
+      <button onclick="window.location.href='/login'">Login</button>
+      <button onclick="window.location.href='/register'">Register</button>
+      <button onclick="window.location.href='/messages'">Messages</button>
+      <button onclick="window.location.href='/support'">Customer Support</button>
+    </div>
+  </header>
+
+  <div class="tech-update">
+    <p>Website/ Tech Updates</p>
+  </div>
+
+  <nav class="navbar">
+    <% const categories = [
+         "CPU","CPU Cooler","Motherboard","Memory","Storage",
+         "GPU","PSU","Case","Case Fan","Thermal Paste","Other"
+       ];
+       categories.forEach(cat => { %>
+      <a href="/category/<%= cat.toLowerCase().replace(/\s+/g,'-') %>">
+        <%= cat %>
+      </a>
+    <% }); %>
+  </nav>
+
+  <div class="account-sections">
+    <div class="section red"    data-panel="account-info">Account Information</div>
+    <div class="section yellow" data-panel="shipping">Shipping / Returns</div>
+    <div class="section purple" data-panel="requests">Listing Requests / Reviews</div>
+    <div class="section green"  data-panel="management">Listing Management</div>
+  </div>
+
+  <div id="account-info" class="settings-panel">
+    <h2>Account Information</h2>
+    <form>
+      <label>Username:</label>
+      <input type="text" value="<%= user.username %>" /><br/>
+      <label>Email:</label>
+      <input
+        type="email"
+        value="<%= (user && user.email) || '' %>"
+      /><br/>
+      <button type="button">Save Changes</button>
+    </form>
+  </div>
+
+  <div id="shipping" class="settings-panel">
+    <h2>Shipping / Returns Settings</h2>
+    <p>Configure shipping rates, carriers, and return policies.</p>
+    <button type="button" onclick="location.href='/seller/purchase'">Purchase Settings</button>
+  </div>
+
+  <div id="requests" class="settings-panel">
+    <h2>Listing Requests / Reviews</h2>
+    <p>Incoming trade, purchase requests, and reviews.</p>
+    <button type="button" onclick="location.href='/seller/requests'">Listing Requests</button>
+  </div>
+
+  <div id="management" class="settings-panel">
+    <h2>Listing Management</h2>
+    <p>View, edit, or remove your active listings.</p>
+    <button type="button" onclick="window.location.href='/listings/manage'">My Listings</button>
+  </div>
+
+  <script>
+    document.querySelectorAll('.section').forEach(el => {
+      el.addEventListener('click', () => {
+        const target = el.getAttribute('data-panel');
+        document.querySelectorAll('.settings-panel')
+          .forEach(panel => panel.classList.remove('active'));
+        document.getElementById(target).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>

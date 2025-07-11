@@ -49,6 +49,21 @@ app.get('/listing-create', (req, res) => {
   res.render('listingCreate', { title: 'Create Listing' });
 });
 
+app.get('/account/buyer', (req, res) => {
+  const safeUser = req.user || { username: '', email: '' };
+  res.render('buyerAccount', { user: safeUser });
+});
+
+app.get('/account/seller', (req, res) => {
+  const safeUser = req.user || { username: '', storeName: '', email: '' };
+  res.render('sellerAccount', { user: safeUser });
+});
+
+app.get('/account/admin', (req, res) => {
+  const safeUser = req.user || { username: '', email: '' };
+  res.render('adminAccount', { user: safeUser });
+});
+
 if (process.env.NODE_ENV !== 'test') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
