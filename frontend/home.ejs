@@ -3,158 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <title>CompSwap Homepage</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background-color: dodgerblue;
-      color: white;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 20px;
-    }
-    .header-left a {
-      text-decoration: none;
-      color: inherit;
-    }
-    .header-left h1 {
-      margin: 0;
-      text-decoration: none;
-      color: white;
-    }
-    .header-right button {
-      margin-left: 10px;
-      padding: 8px 12px;
-      background-color: blue;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .tech-update {
-      background-color: orange;
-      text-align: center;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    .navbar {
-      background-color: red;
-      padding: 10px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .navbar a {
-      color: white;
-      margin-right: 15px;
-      text-decoration: none;
-    }
-    .container {
-      display: flex;
-      height: calc(90vh - 140px);
-      margin: 20px;
-    }
-    .ad {
-      flex: 0 0 15%;
-      padding: 20px;
-      background-color: greenyellow;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      text-align: center;
-    }
-    .content {
-      flex: 2;
-      display: flex;
-      flex-direction: column;
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
-    .featured-listings {
-      flex: 1;
-      background-color: orange;
-      padding: 20px;
-      box-sizing: border-box;
-      overflow-y: auto;
-      text-align: center;
-    }
-    .featured-listings ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .featured-listings li {
-      padding: 5px 0;
-    }
-    .featured-listings li a {
-      text-decoration: none;
-      color: white;
-      display: block;
-      padding: 5px;
-    }
-    .featured-listings li a:hover {
-      background-color: #444;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <header class="header">
-    <div class="header-left">
-      <a href="/" title="Home">
-        <h1>COMP SWAP</h1>
-      </a>
-    </div>
-    <div class="header-right">
-      <button onclick="window.location.href='/login'">Login</button>
-      <button onclick="window.location.href='/register'">Register</button>
-      <button>Messages</button>
-      <button>Customer Support</button>
-    </div>
-  </header>
+  <%- include('header') %>
 
-  <div class="tech-update">
-    <p>Website/ Tech Updates</p>
-  </div>
-
+  <div class="tech-update"><p>Website/ Tech Updates</p></div>
   <nav class="navbar">
-    <% const categories = ["CPU", "CPU Cooler", "Motherboard", "Memory", "Storage", "GPU", "PSU", "Case", "Case Fan", "Thermal Paste", "Other"];
-       categories.forEach(category => { %>
-      <a href="/category/<%= category.toLowerCase().replace(/\s+/g, '-') %>"><%= category %></a>
-    <% }); %>
+    <% 
+      const categories = [
+        "CPU","CPU Cooler","Motherboard","Memory",
+        "Storage","GPU","PSU","Case","Case Fan",
+        "Thermal Paste","Other"
+      ];
+      categories.forEach(cat => { 
+    %>
+      <a href="/category/<%= cat.toLowerCase().replace(/\s+/g,'-') %>">
+        <%= cat %>
+      </a>
+    <% }) %>
   </nav>
 
   <div class="container">
-    <div class="ad">
-      <h3>Advertisement</h3>
-    </div>
-    
+    <div class="ad"><h3>Advertisement</h3></div>
     <div class="content">
       <section class="featured-listings">
         <h2>Featured Listings</h2>
-        <% 
-          const listings = ["Listing 1", "Listing 2", "Listing 3", "Listing 4", "Listing 5", "Listing 6", "Listing 7", "Listing 8", "Listing 9", "Listing 10"];
-          if (listings && listings.length > 0) { 
-        %>
-          <ul>
-            <% listings.forEach(listing => { %>
+
+        <% if (listings && listings.length) { %>
+          <ul class="listing-list">
+            <% listings.forEach(list => { %>
               <li>
-                <a href="/listing/<%= listing.toLowerCase().replace(/\s+/g, '-') %>"><%= listing %></a>
+                <a href="/listing/<%= list._id %>">
+                  <%= list.title %> — $<%= list.price.toFixed(2) %>
+                </a>
               </li>
-            <% }); %>
+            <% }) %>
           </ul>
         <% } else { %>
           <p>No listings available.</p>
         <% } %>
       </section>
     </div>
-    
-    <div class="ad">
-      <h3>Advertisement</h3>
-    </div>
+    <div class="ad"><h3>Advertisement</h3></div>
   </div>
-  
 </body>
 </html>

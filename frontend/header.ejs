@@ -1,0 +1,16 @@
+<header class="header">
+  <div class="header-left">
+    <a href="/" title="Home"><h1>CompSwap</h1></a>
+  </div>
+  <div class="header-right">
+    <% if (currentUser) { %>
+      <button onclick="location.href='/account'">Account</button>
+      <button onclick="location.href='/logout'">Logout</button>
+      <button onclick="location.href='/messages'">Messages</button>
+      <button onclick="location.href='/support'">Customer Support</button>
+    <% } else if (currentPath !== '/login' && currentPath !== '/register') { %>
+      <button onclick="location.href='/login'">Login</button>
+      <button onclick="location.href='/register'">Register</button>
+    <% } %>
+  </div>
+</header>

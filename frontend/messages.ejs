@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('header') %>
+
+  <div class="support-container">
+    <div class="messages-container">
+      <div class="conversations-list">
+        <ul id="conversations">
+          <% summaries.forEach(s => { %>
+            <li data-id="<%= s._id %>"><%= s.username %></li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="chat-area">
+        <div class="input-area user-select">
+          <input id="username-input" type="text" placeholder="Enter username">
+          <button id="select-button">Confirm</button>
+          <div id="user-error" class="error"></div>
+        </div>
+        <div id="chat-window"></div>
+        <div class="input-area">
+          <input id="message-input" type="text" placeholder="Type a message…" disabled>
+          <button id="send-button" disabled>Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket    = io();
+    const convList  = document.getElementById('conversations');
+    const userIn    = document.getElementById('username-input');
+    const selectBtn = document.getElementById('select-button');
+    const userErr   = document.getElementById('user-error');
+    const chatWin   = document.getElementById('chat-window');
+    const msgIn     = document.getElementById('message-input');
+    const sendBtn   = document.getElementById('send-button');
+
+    let currentConv     = null;
+    let pendingUsername = '';
+    const me = '<%= currentUser %>';
+
+    function appendMessage(sender, text) {
+      const username = (sender && typeof sender === 'object' && sender.username)
+        ? sender.username
+        : sender;
+      const el = document.createElement('div');
+      el.classList.add('message', username === me ? 'user' : 'bot');
+      el.textContent = `${username}: ${text}`;
+      chatWin.appendChild(el);
+      chatWin.scrollTop = chatWin.scrollHeight;
+    }
+
+    function clearChat() {
+      chatWin.innerHTML = '';
+    }
+
+    function enableChat() {
+      msgIn.disabled = false;
+      sendBtn.disabled = false;
+      msgIn.focus();
+    }
+
+    function addConversationItem({ _id, username }) {
+      let li = convList.querySelector(`[data-id="${_id}"]`);
+      if (!li) {
+        li = document.createElement('li');
+        li.dataset.id = _id;
+        li.textContent = username;
+        convList.prepend(li);
+      } else {
+        convList.prepend(li);
+      }
+    }
+
+    convList.addEventListener('click', e => {
+      if (e.target.matches('li[data-id]')) {
+        socket.emit('load conversation', e.target.dataset.id);
+      }
+    });
+
+    selectBtn.addEventListener('click', () => {
+      const name = userIn.value.trim();
+      if (!name) return;
+      pendingUsername = name;
+      socket.emit('select user', name);
+    });
+
+    userIn.addEventListener('keydown', e => {
+      if (e.key === 'Enter') selectBtn.click();
+    });
+
+    sendBtn.addEventListener('click', () => {
+      const txt = msgIn.value.trim();
+      if (!txt || !currentConv) return;
+      socket.emit('send message', {
+        conversationId: currentConv,
+        content: txt
+      });
+      appendMessage(me, txt);
+      msgIn.value = '';
+    });
+
+    msgIn.addEventListener('keydown', e => {
+      if (e.key === 'Enter') sendBtn.click();
+    });
+
+    socket.on('select user error', err => {
+      userErr.textContent = err;
+      setTimeout(() => { userErr.textContent = ''; }, 3000);
+    });
+
+    socket.on('conversation loaded', data => {
+      currentConv = data.conversationId;
+      clearChat();
+      data.messages.forEach(m => appendMessage(m.sender, m.content));
+      enableChat();
+
+      let other;
+      if (data.messages.length) {
+        other = data.messages[0].sender === me
+          ? data.messages[1]?.sender
+          : data.messages[0].sender;
+      } else {
+        other = pendingUsername;
+      }
+
+      addConversationItem({
+        _id: data.conversationId,
+        username: (other && typeof other === 'object' && other.username)
+          ? other.username
+          : other
+      });
+      pendingUsername = '';
+    });
+
+    socket.on('update conversation', summary => {
+      addConversationItem(summary);
+    });
+
+    socket.on('new message', m => {
+      const senderName = (m.sender && typeof m.sender === 'object' && m.sender.username)
+        ? m.sender.username
+        : m.sender;
+
+      addConversationItem({
+        _id: m.conversationId,
+        username: senderName
+      });
+
+      if (m.conversationId === currentConv && senderName !== me) {
+        appendMessage(m.sender, m.content);
+      }
+    });
+  </script>
+</body>
+</html>

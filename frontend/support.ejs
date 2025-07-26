@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('header') %>
+  <div class="support-container">
+    <div id="chat-window"></div>
+    <div class="input-area">
+      <input id="message-input" type="text" placeholder="Type your question…" autofocus>
+      <button id="send-button">Send</button>
+      <button id="end-button">End Chat</button>
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io()
+    const chatWindow = document.getElementById('chat-window')
+    const input = document.getElementById('message-input')
+    const sendBtn = document.getElementById('send-button')
+    const endBtn = document.getElementById('end-button')
+    let chatEnded = false
+
+    function appendMessage(cls, text) {
+      const el = document.createElement('div')
+      el.classList.add('message', cls)
+      el.textContent = text
+      chatWindow.appendChild(el)
+      chatWindow.scrollTop = chatWindow.scrollHeight
+    }
+
+    function sendMessage() {
+      const msg = input.value.trim()
+      if (!msg || chatEnded) return
+      appendMessage('user', msg)
+      socket.emit('user message', msg)
+      input.value = ''
+    }
+
+    sendBtn.addEventListener('click', sendMessage)
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        sendMessage()
+      }
+    })
+
+    endBtn.addEventListener('click', () => {
+      if (!chatEnded) {
+        socket.emit('end chat')
+        endBtn.textContent = 'New Chat'
+        chatEnded = true
+      } else {
+        chatWindow.innerHTML = ''
+        endBtn.textContent = 'End Chat'
+        chatEnded = false
+      }
+    })
+
+    socket.on('bot message', text => {
+      appendMessage('bot', text)
+    })
+  </script>
+</body>
+</html>
