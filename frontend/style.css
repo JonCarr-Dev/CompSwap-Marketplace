@@ -13,17 +13,8 @@ html, body {
   justify-content: space-between;
   padding: 10px 20px;
 }
-
-.header-left a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.header-left h1 {
-  margin: 0;
-  color: white;
-}
-
+.header-left a { text-decoration: none; color: inherit; }
+.header-left h1 { margin: 0; color: white; }
 .header-right button {
   margin-left: 10px;
   padding: 8px 12px;
@@ -46,7 +37,6 @@ html, body {
   text-align: center;
   margin-bottom: 20px;
 }
-
 .navbar a {
   color: white;
   margin-right: 15px;
@@ -57,8 +47,8 @@ html, body {
   display: flex;
   height: calc(90vh - 140px);
   margin: 20px;
+  overflow: hidden;
 }
-
 .ad {
   flex: 0 0 15%;
   padding: 20px;
@@ -69,43 +59,114 @@ html, body {
   justify-content: space-between;
   text-align: center;
 }
-
 .content {
   flex: 2;
   display: flex;
   flex-direction: column;
   padding: 0 20px;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+.content.center-content {
+  align-items: center;
 }
 
 .featured-listings {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: orange;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto;
   text-align: center;
+  overflow: hidden;
 }
 
-.featured-listings ul {
+.featured-listings h2 {
+  flex: 0 0 auto;
+  margin: 0 0 10px;
+}
+
+.featured-listings .listing-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.featured-listings li {
-  padding: 5px 0;
+.featured-listings .listing-list li {
+  margin-bottom: 20px;
 }
 
-.featured-listings li a {
+.featured-listings .listing-list li a {
   text-decoration: none;
   color: white;
   display: block;
   padding: 5px;
 }
 
-.featured-listings li a:hover {
+.featured-listings .listing-list li a:hover {
   background-color: #444;
+}
+
+.list-category {
+  font-size: 0.9rem;
+  color: white;
+  margin: 0 0 10px;
+}
+
+.listing-detail {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+  padding: 0 10px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.listing-title {
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.listing-detail img {
+  width: 50%;
+  height: auto;
+  display: block;
+  margin: 0 auto 40px;
+}
+
+.listing-description,
+.listing-condition,
+.listing-price,
+.listing-seller {
+  color:white;
+  margin: 25px 0;
+  line-height: 1.4;
+  font-size: 1.1rem;
+  max-width: 100%;
+}
+
+.listing-actions {
+  margin-top: 40px;
+}
+
+.action-btn {
+  padding: 10px 16px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 1rem;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .form-container {
@@ -118,22 +179,16 @@ html, body {
   border-radius: 5px;
   box-sizing: border-box;
 }
-
 .form-container h2 {
   text-align: center;
   margin-top: 0;
   margin-bottom: 20px;
 }
-
-.form-container form {
-  text-align: left;
-}
-
+.form-container form { text-align: left; }
 .form-container label {
   display: block;
   margin: 10px 0 5px;
 }
-
 .form-container input,
 .form-container select,
 .form-container textarea {
@@ -144,7 +199,6 @@ html, body {
   border-radius: 3px;
   box-sizing: border-box;
 }
-
 .form-container button {
   width: 100%;
   padding: 10px;
@@ -154,6 +208,15 @@ html, body {
   color: white;
   font-size: 16px;
   cursor: pointer;
+}
+
+.form-container .error {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #d9534f;
+  margin: 0 0 1em;
+  font-weight: 500;
 }
 
 .errors {
@@ -190,35 +253,15 @@ textarea {
   font-weight: bold;
   transition: transform .1s ease-in-out;
 }
-
 .section:hover {
   transform: scale(1.05);
 }
-
-.section.red {
-  background-color: #e74c3c;
-}
-
-.section.yellow {
-  background-color: #f1c40f;
-  color: #333;
-}
-
-.section.purple {
-  background-color: #8e44ad;
-}
-
-.section.blue {
-  background-color: #3498db;
-}
-
-.section.green {
-  background-color: #2ecc71;
-}
-
-.section.orange {
-  background-color: #e67e22;
-}
+.section.red { background-color: #e74c3c; }
+.section.yellow { background-color: #f1c40f; color: #333; }
+.section.purple { background-color: #8e44ad; }
+.section.blue   { background-color: #3498db; }
+.section.green  { background-color: #2ecc71; }
+.section.orange { background-color: #e67e22; }
 
 .settings-panel {
   display: none;
@@ -228,15 +271,8 @@ textarea {
   padding: 20px;
   border-radius: 5px;
 }
-
-.settings-panel.active {
-  display: block;
-}
-
-.settings-panel h2 {
-  margin-top: 0;
-}
-
+.settings-panel.active { display: block; }
+.settings-panel h2 { margin-top: 0; }
 .settings-panel button {
   margin-top: 10px;
   padding: 8px 12px;
@@ -256,8 +292,7 @@ textarea {
   padding-bottom: 80px;
   box-sizing: border-box;
 }
-
-#chat-window {
+.support-container > #chat-window {
   flex: 1;
   overflow-y: auto;
   padding: 10px;
@@ -265,37 +300,76 @@ textarea {
   border-radius: 5px;
   margin-bottom: 10px;
 }
-
-.message {
-  margin: 8px 0;
-  padding: 8px;
-  border-radius: 4px;
-  max-width: 75%;
-}
-
-.message.user {
-  background-color: #2a9df4;
-  align-self: flex-end;
-}
-
-.message.bot {
-  background-color: #555;
-  align-self: flex-start;
-}
-
-.input-area {
+.support-container > .input-area {
   display: flex;
   gap: 10px;
 }
-
-.input-area input {
+.support-container > .input-area input {
   flex: 1;
   padding: 10px;
   border-radius: 3px;
   border: 1px solid #ccc;
 }
-
-.input-area button {
+.support-container > .input-area button {
+  padding: 10px 16px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.support-container > .messages-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.support-container > .messages-container > .conversations-list {
+  flex: 0 0 200px;
+  background: rgba(0,0,0,0.1);
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.support-container > .messages-container > .conversations-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.support-container > .messages-container > .conversations-list li {
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+.support-container > .messages-container > .conversations-list li:hover {
+  background: rgba(255,255,255,0.2);
+}
+.support-container > .messages-container > .chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.support-container > .messages-container > .chat-area > #chat-window {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.support-container > .messages-container > .chat-area > .input-area {
+  display: flex;
+  gap: 10px;
+}
+.support-container > .messages-container > .chat-area > .input-area input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+.support-container > .messages-container > .chat-area > .input-area button {
   padding: 10px 16px;
   background-color: blue;
   color: white;
@@ -304,65 +378,53 @@ textarea {
   cursor: pointer;
 }
 
-.messages-container {
-  display: flex;
-  height: calc(100vh - 80px);
+.message {
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 4px;
+  max-width: 75%;
+}
+.message.user {
+  background-color: #2a9df4;
+  align-self: flex-end;
+}
+.message.bot {
+  background-color: #555;
+  align-self: flex-start;
 }
 
-.conversations-list {
-  flex: 0 0 200px;
-  background: rgba(0,0,0,0.1);
-  overflow-y: auto;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.conversations-list ul {
-  list-style: none;
-  margin: 0;
+.featured-listings li {
+  margin-bottom: 20px;
   padding: 0;
 }
 
-.conversations-list li {
-  padding: 8px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+.featured-listings .list-title {
+  font-size: 1.3rem;
+  margin: 0 0 5px;
 }
 
-.conversations-list li:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.chat-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.user-select {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.user-select input,
-.user-select button {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-.user-select input {
-  flex: 1;
-}
-
-.user-select button {
-  background-color: blue;
+.featured-listings .list-snippet {
+  font-size: 0.95rem;
+  margin: 0 0 5px;
   color: white;
-  border: none;
-  cursor: pointer;
+}
+
+.featured-listings .list-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.error-page {
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 20px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 5px;
+  text-align: center;
+}
+
+.error-page h2 {
+  margin-bottom: 10px;
+  color: white;
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= listing.title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('header') %>
+
+  <div class="tech-update"><p>Website/ Tech Updates</p></div>
+  <nav class="navbar">
+    <% 
+      const categories = [
+        "CPU","CPU Cooler","Motherboard","Memory",
+        "Storage","GPU","PSU","Case","Case Fan",
+        "Thermal Paste","Other"
+      ];
+      categories.forEach(cat => { 
+        const slug = cat.toLowerCase().replace(/\s+/g,'-');
+    %>
+      <a href="/category/<%= slug %>"><%= cat %></a>
+    <% }) %>
+  </nav>
+
+  <div class="container">
+    <div class="ad"><h3>Advertisement</h3></div>
+
+    <div class="content center-content">
+      <div class="listing-detail">
+        <h2 class="listing-title"><%= listing.title %></h2>
+
+        <img 
+          src="<%= listing.imageUrl %>" 
+          alt="<%= listing.title %>" 
+        />
+
+        <p class="listing-description">
+          <strong>Description:</strong> <%= listing.description %>
+        </p>
+
+        <p class="listing-condition">
+          <strong>Condition:</strong> <%= listing.condition %>
+        </p>
+
+        <p class="listing-price">
+          <strong>Price:</strong> $<%= listing.price.toFixed(2) %>
+        </p>
+
+        <p class="listing-seller">
+          <strong>Seller:</strong> <%= listing.seller.username %>
+        </p>
+
+        <div class="listing-actions">
+          <% const isOwner = listing.seller._id.toString() === currentUserId; %>
+
+          <button
+            class="action-btn"
+            <% if (isOwner) { %> disabled <% } else { %>
+              onclick="location.href='/messages/start/<%= listing.seller._id %>'"
+            <% } %>
+          >
+            Message Seller
+          </button>
+
+          <button
+            class="action-btn"
+            <% if (isOwner) { %> disabled <% } else { %>
+              onclick="location.href='/listing/<%= listing._id %>/purchase'"
+            <% } %>
+          >
+            Purchase
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ad"><h3>Advertisement</h3></div>
+  </div>
+</body>
+</html>

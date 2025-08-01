@@ -12,7 +12,7 @@
     <div class="messages-container">
       <div class="conversations-list">
         <ul id="conversations">
-          <% summaries.forEach(s => { %>
+          <% (Array.isArray(summaries) ? summaries : []).forEach(s => { %>
             <li data-id="<%= s._id %>"><%= s.username %></li>
           <% }) %>
         </ul>
@@ -34,26 +34,32 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket    = io();
-    const convList  = document.getElementById('conversations');
-    const userIn    = document.getElementById('username-input');
+    const socket = io();
+    const convList = document.getElementById('conversations');
+    const userIn = document.getElementById('username-input');
     const selectBtn = document.getElementById('select-button');
-    const userErr   = document.getElementById('user-error');
-    const chatWin   = document.getElementById('chat-window');
-    const msgIn     = document.getElementById('message-input');
-    const sendBtn   = document.getElementById('send-button');
+    const userErr = document.getElementById('user-error');
+    const chatWin = document.getElementById('chat-window');
+    const msgIn = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-button');
 
-    let currentConv     = null;
+    let currentConv = null;
     let pendingUsername = '';
     const me = '<%= currentUser %>';
 
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const loadConv = params.get('load');
+      if (loadConv) {
+        socket.emit('load conversation', loadConv);
+      }
+    });
+
     function appendMessage(sender, text) {
-      const username = (sender && typeof sender === 'object' && sender.username)
-        ? sender.username
-        : sender;
+      const name = sender && sender.username ? sender.username : sender;
       const el = document.createElement('div');
-      el.classList.add('message', username === me ? 'user' : 'bot');
-      el.textContent = `${username}: ${text}`;
+      el.classList.add('message', name === me ? 'user' : 'bot');
+      el.textContent = `${name}: ${text}`;
       chatWin.appendChild(el);
       chatWin.scrollTop = chatWin.scrollHeight;
     }
@@ -69,11 +75,13 @@
     }
 
     function addConversationItem({ _id, username }) {
+      const name = username && username.username ? username.username : username;
+      if (name === me) return;
       let li = convList.querySelector(`[data-id="${_id}"]`);
       if (!li) {
         li = document.createElement('li');
         li.dataset.id = _id;
-        li.textContent = username;
+        li.textContent = name;
         convList.prepend(li);
       } else {
         convList.prepend(li);
@@ -100,10 +108,7 @@
     sendBtn.addEventListener('click', () => {
       const txt = msgIn.value.trim();
       if (!txt || !currentConv) return;
-      socket.emit('send message', {
-        conversationId: currentConv,
-        content: txt
-      });
+      socket.emit('send message', { conversationId: currentConv, content: txt });
       appendMessage(me, txt);
       msgIn.value = '';
     });
@@ -114,7 +119,7 @@
 
     socket.on('select user error', err => {
       userErr.textContent = err;
-      setTimeout(() => { userErr.textContent = ''; }, 3000);
+      setTimeout(() => userErr.textContent = '', 3000);
     });
 
     socket.on('conversation loaded', data => {
@@ -123,21 +128,14 @@
       data.messages.forEach(m => appendMessage(m.sender, m.content));
       enableChat();
 
-      let other;
+      let other = pendingUsername;
       if (data.messages.length) {
-        other = data.messages[0].sender === me
-          ? data.messages[1]?.sender
-          : data.messages[0].sender;
-      } else {
-        other = pendingUsername;
+        const first = data.messages[0].sender;
+        const second = data.messages[1]?.sender;
+        other = (first === me ? second : first) || other;
       }
 
-      addConversationItem({
-        _id: data.conversationId,
-        username: (other && typeof other === 'object' && other.username)
-          ? other.username
-          : other
-      });
+      addConversationItem({ _id: data.conversationId, username: other });
       pendingUsername = '';
     });
 
@@ -146,16 +144,8 @@
     });
 
     socket.on('new message', m => {
-      const senderName = (m.sender && typeof m.sender === 'object' && m.sender.username)
-        ? m.sender.username
-        : m.sender;
-
-      addConversationItem({
-        _id: m.conversationId,
-        username: senderName
-      });
-
-      if (m.conversationId === currentConv && senderName !== me) {
+      addConversationItem({ _id: m.conversationId, username: m.sender });
+      if (m.conversationId === currentConv) {
         appendMessage(m.sender, m.content);
       }
     });

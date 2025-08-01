@@ -9,7 +9,8 @@
     "start": "node server.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "lint": "eslint .",
-    "format": "prettier --write \"**/*.{js,json,css,ejs}\""
+    "format": "prettier --write \"**/*.{js,json,css,ejs}\"",
+    "reset:db": "node resetDatabase.js"
   },
   "repository": {
     "type": "git",

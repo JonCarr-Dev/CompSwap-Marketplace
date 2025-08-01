@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CompSwap Homepage</title>
+  <title><%= title %> Category</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -18,8 +18,10 @@
         "Thermal Paste","Other"
       ];
       categories.forEach(cat => { 
+        const slug = cat.toLowerCase().replace(/\s+/g,'-');
     %>
-      <a href="/category/<%= cat.toLowerCase().replace(/\s+/g,'-') %>">
+      <a href="/category/<%= slug %>"
+         class="<%= currentCategory === cat ? 'active' : '' %>">
         <%= cat %>
       </a>
     <% }) %>
@@ -29,7 +31,7 @@
     <div class="ad"><h3>Advertisement</h3></div>
     <div class="content">
       <section class="featured-listings">
-        <h2>Featured Listings</h2>
+        <h2><%= title %> Listings</h2>
 
         <% if (listings && listings.length) { %>
           <ul class="listing-list">
@@ -53,7 +55,7 @@
             <% }) %>
           </ul>
         <% } else { %>
-          <p>No listings available.</p>
+          <p>No listings in this category.</p>
         <% } %>
       </section>
     </div>
